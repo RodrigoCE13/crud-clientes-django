@@ -41,6 +41,14 @@ def signup(request):
 @login_required
 #listar clientes
 def clientes(request):
+    queryset = request.GET.get("buscar")
+    print(queryset)
+    clientes = Cliente.objects.filter(estado=True)
+    if queryset:
+        clientes=Cliente.objects.filter(
+            Q(nombre__icontains= queryset)|
+            Q(razon_social__icontains=queryset)
+        ).distinct()   
     clientes=Cliente.objects.all()#en caso de quere mostrar solo los datos del usuario logeado ""Cliente.objects.filter(user=request.user)""
     return render(request, 'clientes.html',{'clientes':clientes})
 @login_required
